@@ -9,6 +9,45 @@ getItemsInOrderById(CustomerUsername, OrderID, Items) :-
 	order(CustomerID, OrderID, Items).
 % problem 3 Done
 
+
+% Problem 5
+calcOrder([],0).
+calcOrder([H|T],Price):-
+calcOrder(T,P1),item(H,_,P),Price is P1+P.
+
+calcPriceOfOrder(Cname,OID,TotalPrice):-
+    customer(CID, Cname),
+    order(CID, OID, List),
+    calcOrder(List,TotalPrice).
+
+% Problem 6
+isBoycott(C):-
+boycott_company(C,_).
+isBoycott(I):-
+item(I,X,_),isBoycott(X).
+
+% problem 9
+
+is_Alternative(Item, List, [NewItem|List]) :-
+    alternative(Item, NewItem).
+is_Alternative(Item, List, [Item|List]) :-
+    \+ alternative(Item, _).
+
+checklist([], []).
+checklist([H|T], NewList) :-
+    checklist(T, TempList),
+    is_Alternative(H, TempList, NewList).
+
+replaceBoycottItemsFromAnOrder(Cname, OID, NewList) :-
+    customer(CID, Cname),
+    order(CID, OID, List),
+    checklist(List, NewList).
+
+
+% Problem 10
+calcPriceAfterReplacingBoycottItemsFromAnOrder(Cname,OID,NewList,TotalPrice):-
+replaceBoycottItemsFromAnOrder(Cname, OID, NewList), calcOrder(NewList,TotalPrice).
+
 % problem 11
 getTheDifferenceInPriceBetweenItemAndAlternative(BoycottItem, Alt, DiffPrice):-
 	alternative(BoycottItem, Alt),
