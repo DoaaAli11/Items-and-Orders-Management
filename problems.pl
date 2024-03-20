@@ -58,6 +58,20 @@ getItemsInOrderById(CustomerUsername, OrderID, Items) :-
 
 %_____________________________________________________________
 
+% problem 4
+getNumOfItems(CustomerUserName, OrderID, Count):-
+    customer(CustomerID, CustomerUserName),
+    order(CustomerID, OrderID,Items),
+    countItems(Items,Count).
+
+countItems([],0).
+countItems([_|T],Count):-
+    countItems(T,NewCount),
+    Count is NewCount+1.
+%_____________________________________________________________
+
+% Problem 5
+
 
 % Problem 5
 calcOrder([],0).
