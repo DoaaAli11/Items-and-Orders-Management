@@ -34,6 +34,18 @@ list_orders(CustomerName, OrderNum, Orders, AllOrders) :-
     	list_orders(CustomerName, NextOrderNum, NewAllOrders, AllOrders).
 
 list_orders(_, _, Orders, Orders). 
+%_____________________________________________________________
+
+
+% problem 2
+countOrdersOfCustomer(CustomerUserName, Count):-
+	list_orders(CustomerUserName, AllOrders),
+        countOrders(AllOrders, Count).
+
+countOrders([],0).
+countOrders([_|T], Count):-
+    countOrders(T,NewCount),
+    Count is NewCount+1.
 
 %_____________________________________________________________
 
