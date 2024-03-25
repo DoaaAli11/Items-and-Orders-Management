@@ -7,7 +7,7 @@
 
 %append lists
 
-concat([], L2, L2).    
+concat([], L2, L2).
 
 concat([H | T], L2, [H | R]) :-
 	concat(T, L2, R).
@@ -28,12 +28,12 @@ list_orders(CustomerName, AllOrders) :-
 
 list_orders(CustomerName, OrderNum, Orders, AllOrders) :-
 	customer(CustomerID, CustomerName),
-    	order(CustomerID, OrderNum, Items),
-    	NextOrderNum is OrderNum + 1,
+	order(CustomerID, OrderNum, Items),
+	NextOrderNum is OrderNum + 1,
 	push_front(Orders, order(CustomerID, OrderNum, Items), NewAllOrders),
-    	list_orders(CustomerName, NextOrderNum, NewAllOrders, AllOrders).
+	list_orders(CustomerName, NextOrderNum, NewAllOrders, AllOrders).
 
-list_orders(_, _, Orders, Orders). 
+list_orders(_, _, Orders, Orders).
 %_____________________________________________________________
 
 
@@ -72,6 +72,17 @@ countItems([_|T],Count):-
 
 % Problem 5
 
+calcPriceOfOrder1(Name,Oid,TotalPrice):-
+    order(Name,Oid,List),calcPrice(List,0,TotalPrice).
+
+calcPrice([],TotalPrice,TotalPrice).
+
+calcPrice([Item|Tail],Price1,TotalPrice):-
+    item(Item,_,Price),
+    NewPrice is Price1 + Price,
+    calcPrice(Tail,NewPrice,TotalPrice).
+%_____________________________________________________________
+
 
 % Problem 5
 calcOrder([],0).
@@ -92,6 +103,33 @@ boycott_company(C,_).
 isBoycott(I):-
 item(I,X,_),isBoycott(X).
 
+%_____________________________________________________________
+
+%problem 7
+whyToBoycott(X,Justification) :-
+    boycott_company(X, Justification).
+
+whyToBoycott(X,Justification) :-
+    item(X,Company,_),
+    boycott_company(Company,Justification).
+
+%_____________________________________________________________
+
+%problem 8
+
+removeBoycottItemsFromAnOrder(Name,Oid,NewList):-
+    order(Name,Oid,PrevList),deleteItems(PrevList,NewList).
+
+
+deleteItems([],[]).
+
+deleteItems([Item|Tail],NewList):-
+    \+ alternative(Item,_),
+    deleteItems(Tail,NewTail),
+    NewList = [Item|NewTail].
+
+deleteItems([_|Tail], NewList) :-
+    deleteItems(Tail, NewList).
 %_____________________________________________________________
 
 
@@ -152,8 +190,8 @@ remove_alternative(ItemName, Alt):-
 
 % insert / remove boycott
 add_boycott_company(CompName, Description):-
-	assertz(boycott_company(CompName, Descriptio)).
+	assertz(boycott_company(CompName, Description)).
 
-remove_boycott_company(CompName, Descriptio):-
-	retract(boycott_company(CompName, Descriptio)).
+remove_boycott_company(CompName, Description):-
+	retract(boycott_company(CompName, Description)).
 
