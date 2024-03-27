@@ -118,7 +118,9 @@ whyToBoycott(X,Justification) :-
 %problem 8
 
 removeBoycottItemsFromAnOrder(Name,Oid,NewList):-
-    order(Name,Oid,PrevList),deleteItems(PrevList,NewList).
+	customer(CID, Name),
+	order(CID,Oid,PrevList),
+	deleteItems(PrevList,NewList).
 
 
 deleteItems([],[]).
